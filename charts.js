@@ -81,7 +81,7 @@ function buildCharts(sample) {
    reversedValues = sliced10Values.reverse(); 
    reversedLabel = sliced10OtuLabel.reverse();
    
-   console.log(reversedIds, reversedValues);
+   console.log(reversedIds, reversedValues, reversedLabel);
 
     var sortedValues = reversedValues.sort((a, b) => a - b);
     //var sortedIds = reversedIds.sort((a, b) => a - b);
@@ -90,6 +90,8 @@ function buildCharts(sample) {
     var xValues = sortedValues;
     var yValues = reversedIds;
 
+   
+      
   //     console.log(yValues.toString());
   
     // 7. Create the yticks for the bar chart.
@@ -101,8 +103,9 @@ function buildCharts(sample) {
 
 
     var trace = {
-      x: xValues,
+      x: sliced10Values,
       y: yticks,
+      text: reversedLabel,
       type: "bar",
       orientation: "h"
       };
@@ -111,7 +114,8 @@ function buildCharts(sample) {
     var barData = [trace];
     // 9. Create the layout for the bar chart. 
     var barLayout = {
-     title: "Top 10 Bacteria Cultures Found"  
+     title: "Top 10 Bacteria Cultures Found",
+    
     };
     // 10. Use Plotly to plot the data with the layout. 
     Plotly.newPlot("bar", barData, barLayout);
