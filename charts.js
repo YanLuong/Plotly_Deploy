@@ -37,6 +37,7 @@ function buildMetadata(sample) {
     // Filter the data for the object with the desired sample number
     var resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
     var result = resultArray[0];
+    console.log(result,"metadata wfreq");
     // Use d3 to select the panel with id of `#sample-metadata`
     var PANEL = d3.select("#sample-metadata");
 
@@ -70,7 +71,7 @@ function buildCharts(sample) {
     var otuIdsArray = result.otu_ids;
     var otu_label =  result.otu_labels;
 
-    console.log(otuIdsArray);
+    console.log(otuIdsArray, sampleValuesArray);
 
    sliced10Ids = otuIdsArray.slice(0, 10);
    sliced10Values = sampleValuesArray.slice(0, 10);
@@ -89,10 +90,6 @@ function buildCharts(sample) {
 
     var xValues = sortedValues;
     var yValues = reversedIds;
-
-   
-      
-  //     console.log(yValues.toString());
   
     // 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order  
@@ -101,9 +98,9 @@ function buildCharts(sample) {
     // var yticks = yValues.map(element=> {return element.toString()});
     console.log(yticks);
 
-
+    // trace bar chart
     var trace = {
-      x: sliced10Values,
+      x: xValues,
       y: yticks,
       text: reversedLabel,
       type: "bar",
@@ -114,10 +111,32 @@ function buildCharts(sample) {
     var barData = [trace];
     // 9. Create the layout for the bar chart. 
     var barLayout = {
-     title: "Top 10 Bacteria Cultures Found",
-    
-    };
+     title: "Top 10 Bacteria Cultures Found"};
+
+
+     // 1. Create the trace for the bubble chart.
+    var trace1 = {
+      x: otuIdsArray,
+      y: sampleValuesArray,
+      text: otu_label,
+      mode: "markers",
+      marker: {
+        size:sampleValuesArray.map(size => size * 0.5),
+        colorscale: 'Earth',
+        color: otuIdsArray,
+        opacity: 0.5
+      }
+    }
+    // 2. Create the layout for the bubble chart.
+    var bubbleData = [trace1];
+
+    var bubbleLayout = {
+      title: "Bacteria Culture Per Sample"};
+
+
     // 10. Use Plotly to plot the data with the layout. 
     Plotly.newPlot("bar", barData, barLayout);
+
+    Plotly.newPlot("bubble", bubbleData, bubbleLayout);    
   });
 }
