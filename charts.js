@@ -58,20 +58,24 @@ function buildMetadata(sample) {
 function buildCharts(sample) {
   // 2. Use d3.json to load and retrieve the samples.json file 
   d3.json("samples.json").then((data) => {
-    // 3. Create a variable that holds the samples array. 
+    // 3. Create a variable that holds the samples and meta data array. 
     var sampleData = data.samples;
+    var metaData = data.metadata;
     // 4. Create a variable that filters the samples for the object with the desired sample number.
     var sampleSelected = sampleData.filter(sampleNum => sampleNum.id == sample);
+    var MetaSampleSelected = metaData.filter(sampleObj => sampleObj.id == sample);
     //  5. Create a variable that holds the first sample in the array.
     var result = sampleSelected[0];
-    console.log(result)
+    var metaResult = MetaSampleSelected[0];
+    console.log(result,metaResult)
 
     // 6. Create variables that hold the otu_ids, otu_labels, and sample_values.
     var sampleValuesArray = result.sample_values;
     var otuIdsArray = result.otu_ids;
     var otu_label =  result.otu_labels;
+    var vfreq = metaResult.wfreq;
 
-    console.log(otuIdsArray, sampleValuesArray);
+    console.log(otuIdsArray, sampleValuesArray, vfreq," = frequently washed belly button");
 
    sliced10Ids = otuIdsArray.slice(0, 10);
    sliced10Values = sampleValuesArray.slice(0, 10);
@@ -133,10 +137,45 @@ function buildCharts(sample) {
     var bubbleLayout = {
       title: "Bacteria Culture Per Sample"};
 
+    // 3. Create the trace and layout for gauge chart.
+
+    // trace for gauge chart.
+
+    var trace2 = {
+      domain: { x: [0, 1], y: [0, 1] },
+      value: vfreq,
+      title: { text: "Scrubs per Week" },
+      type: "indicator",
+      mode: "gauge+number",
+      gauge: {
+        axis: { range: [null, 10] },
+        bar: { color: "black" },
+        steps: [
+          { range: [0, 2], color: "red" },
+          { range: [2, 4], color: "orange" },
+          { range: [4, 6], color: "yellow" },
+          { range: [6, 8], color: "green" },
+          { range: [8, 10], color: "darkgreen" }
+        ]}
+    }
+
+    var gaugeData = [trace2];
+
+
+    var gaugeLayout = { 
+        title: 'Belly Button Washing Frequency',
+        showlegend: false,
+        height: 450,
+        width: 600
+      }
+     
+
 
     // 10. Use Plotly to plot the data with the layout. 
     Plotly.newPlot("bar", barData, barLayout);
 
     Plotly.newPlot("bubble", bubbleData, bubbleLayout);    
+
+    Plotly.newPlot("gauge", gaugeData, gaugeLayout);
   });
 }
