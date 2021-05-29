@@ -1,0 +1,11 @@
+
+
+.jumbotron {
+  background-image: url("../images/bellybutton.jpeg");
+  background-size: 100% 100%;
+  text-align: center;
+}
+
+.bg-grey {
+  background-color: #f6f6f6;
+}
